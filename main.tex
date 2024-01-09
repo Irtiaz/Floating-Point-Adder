@@ -45,6 +45,9 @@ Instead of making all possible shifters (1 bit shifter, 2 bit shifter, 3 bit shi
 
 Now that the fixed amount of shifters (that can only shift by an amount that is a whole power of 2) are ready, we can finally create arbitrary shifters. The arbitrary right shifter (same logic for left shifter) takes 2 inputs - \textit{the number to shift} and \textit{the shift amount}. Since the shift amount is specified by a binary number, we can leverage the fact that in a binary number, each bit corresponds to the availability of a certain power of 2. So connecting each bit to the corresponding shifter's enable and chaining such shifters will suffice to shift by any arbitrary amount.
 
+\subsection{Re-arranger}
+The exponents of the numbers need to be equal in order for the significands to be passed to the adder. To do that, we first need to find the difference of their exponent and shift the smaller exponent number to the right. So we clearly need a distinction based on the exponent. The \textit{Re-arranger} module takes 2 numbers as the base number(\textit{A}, \textit{B}) and 2 other decider numbers(\textit{P}, \textit{Q}) and re-arrange the number based on the decider numbers. It outputs 2 numbers - \textit{smaller} and \textit{larger}. If $P > Q$ then $\textrm{smaller} = A$ and $\textrm{larger} = B$. The alternative case happens when $P < Q$.\\
 
+This is achieved by using a subtractor circuit as a comparator and comparing the \textit{deciders}. Then the comparison result is fed into 2 multiplexers that finally re-arrange the \textit{base} numbers and output \textit{smaller} and \textit{larger}
 
 \end{document}
