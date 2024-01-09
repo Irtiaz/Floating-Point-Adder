@@ -38,7 +38,7 @@ Each high level module and how they work is listed below
 \subsection{Multiplexers}
 There are several multiplexer circuit each working with different input sizes. The multiplexers that were required for this assignment are - $5\times1$, $8\times1$, $28\times1$, $32\times1$. They were created by chaining several $74157$ MUX ICs.
 
-\subsection{Shifters}
+\subsection{Shifters}\label{shifter_section}
 In order to shift the numbers we needed different kind of shifters for both direction. In normalization and also in exponent-equalization, the numbers needed to be shifted by arbitrary amount. So shifters that can support arbitrary amount shifting were required.\\
 
 Instead of making all possible shifters (1 bit shifter, 2 bit shifter, 3 bit shifter and so on..), the design was cleverly crafted so that there are lesser number of ICs used. Only 5 different shifters were created (1, 2, 4, 8 and 16). Each of them having 2 inputs - \textit{the number} and \textit{enable}. They are designed so that when the \textit{enable} is set to 1, the number is shifted by the amount specified by the module, otherwise the number is not changed and passed to the output. This \textit{enable} feature was achieved by introducing a MUX in the output so that when \textit{enable} is 1, the shifted number is sent to the output, otherwise the original number is sent to the output.\\
@@ -50,4 +50,16 @@ The exponents of the numbers need to be equal in order for the significands to b
 
 This is achieved by using a subtractor circuit as a comparator and comparing the \textit{deciders}. Then the comparison result is fed into 2 multiplexers that finally re-arrange the \textit{base} numbers and output \textit{smaller} and \textit{larger}
 
+\subsection{Priority Encoder}
+The priority encoder IC (74148) is only available for 8 to 3 line. But in order to normalize the number we needed priority encoders of size 32 bits (More details can be found in Section \ref{normalizer_section}). So we had to extend the basic 74148 IC. Moreover, the 74148 IC has active low inputs. We had to convert it to be used as active high input
+
+\subsection{Normalization}\label{normalizer_section}
+After addition the sum could become denormalized. In that case we have to normalize the result. Let's say the sum looks like this:  $d_1d_0.d_{-1}d_{-2}...d_{-20}$. Then the normalization process can be described in 3 cases -
+\begin{description}
+	\item[\boldmath{$d_1d_0=01$}] The number is already normalized
+	\item[\boldmath{$d_1d_0=1\times$}] Shift the number 1 bit to the right (hence increment the exponent)
+	\item[\boldmath{$d_1d_0=00$}] The number needs to be left shifted to bring a 1 after the radix point to the front of the number
+\end{description}
+
+The last case is a little different than the other cases since it requires finding the first 1 after the radix point when scanned from left to right. If the first 1 is found at position $d_{-n}$ than the number has to be shifted $n$ bits to the left. Note that in this example, $d_i = 0;\ \forall i < n$. The bits to the right of the first 1 do not matter. So it is clear that the first 1 has \textit{more priority} than the other 1s that follow. And we also want the position of the first 1 in binary so that this can be directly fed into the enables of the shifters as described in Section \ref{shifter_section}.This process can be done by using a priority encoder
 \end{document}
