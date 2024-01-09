@@ -32,7 +32,19 @@ The assignment asked to create a floating point adder circuit that takes 2 float
 	\end{tabular}\par
 }
 
-\section{Description and Circuit Diagram of Modules}
+\section{Comprehensive Design Description}
+Each high level module and how they work is listed below
+
+\subsection{Multiplexers}
+There are several multiplexer circuit each working with different input sizes. The multiplexers that were required for this assignment are - $5\times1$, $8\times1$, $28\times1$, $32\times1$. They were created by chaining several $74157$ MUX ICs.
+
+\subsection{Shifters}
+In order to shift the numbers we needed different kind of shifters for both direction. In normalization and also in exponent-equalization, the numbers needed to be shifted by arbitrary amount. So shifters that can support arbitrary amount shifting were required.\\
+
+Instead of making all possible shifters (1 bit shifter, 2 bit shifter, 3 bit shifter and so on..), the design was cleverly crafted so that there are lesser number of ICs used. Only 5 different shifters were created (1, 2, 4, 8 and 16). Each of them having 2 inputs - \textit{the number} and \textit{enable}. They are designed so that when the \textit{enable} is set to 1, the number is shifted by the amount specified by the module, otherwise the number is not changed and passed to the output. This \textit{enable} feature was achieved by introducing a MUX in the output so that when \textit{enable} is 1, the shifted number is sent to the output, otherwise the original number is sent to the output.\\
+
+Now that the fixed amount of shifters (that can only shift by an amount that is a whole power of 2) are ready, we can finally create arbitrary shifters. The arbitrary right shifter (same logic for left shifter) takes 2 inputs - \textit{the number to shift} and \textit{the shift amount}. Since the shift amount is specified by a binary number, we can leverage the fact that in a binary number, each bit corresponds to the availability of a certain power of 2. So connecting each bit to the corresponding shifter's enable and chaining such shifters will suffice to shift by any arbitrary amount.
+
 
 
 \end{document}
