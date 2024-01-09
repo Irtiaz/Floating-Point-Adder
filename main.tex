@@ -102,8 +102,8 @@ By the \textit{IEEE 754} standard, the approximation is achieved in the followin
 		\hline
 	\end{tabular}\par
 }
-From this table this is apparent that we only add 1 when the guard bit (G) is 1 \textbf{AND} either of the round bit (R) \textbf{OR} the sticky bit (S) \textbf{OR} the last bit of the significand is 1. So we add 1 when $G(R + S + d_0) = 1$\\
+From this table this is apparent that we only add 1 when the guard bit (G) is 1 \textbf{AND} either of the round bit (R) \textbf{OR} the sticky bit (S) \textbf{OR} the last bit of the significand is 1. So we add 1 when $G(R + S + d_0) = 1$. In other words, we add $G(R + S + d_0)$ to our 20 bit significand.\\
 
-In other words, we add $G(R + S + d_0)$ to our 20 bit significand.
+The number can become denormalized after rounding up or rounding to even. In that case we have to shift the number 1 bit to the right and hence increment the exponent. Because the exponent is being incremented, there can be scenarios where the exponent is too large, thus an overflow. So the rounder also reports such overflows.
 
 \end{document}
