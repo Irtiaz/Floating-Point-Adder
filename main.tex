@@ -15,4 +15,24 @@ $$(-1)^{\textrm{sign}}\times(1 + \textrm{significand})\times2^{\textrm{exponent}
 Here the \textit{exponent} portion represents the exponent stored in memory.\\\\
 
 This representation has the power of encapsulating large range due to the use of exponents. On the other hand it can store numbers in great precision as effective exponents can be negative, and thus indicate really small numbers. But it should be kept in mind that there can be scenarios, specially for larger exponents, where the exact floating point number can not be stored. In those cases the memory stores the nearest floating point number.
+
+\pagebreak
+
+\section{Problem Specification}
+The assignment asked to create a floating point adder circuit that takes 2 floating point numbers and calculates their sum, and also notifies if there was any overflow or underflow. The representation was defined in the following manner- \\
+
+{
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Sign} & \textbf{Exponent} & \textbf{Significand}\\
+		\hline
+		1 bit & 11 bits & 20 bits\\
+		\hline
+	\end{tabular}\par
+}
+
+\section{Description and Circuit Diagram of Modules}
+
+
 \end{document}
