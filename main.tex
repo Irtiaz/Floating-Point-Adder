@@ -64,5 +64,13 @@ After addition the sum could become denormalized. In that case we have to normal
 	\item[\boldmath{$d_1d_0=00$}] The number needs to be left shifted to bring a 1 after the radix point to the front of the number
 \end{description}
 
-The last case is a little different than the other cases since it requires finding the first 1 after the radix point when scanned from left to right. If the first 1 is found at position $d_{-n}$ than the number has to be shifted $n$ bits to the left. Note that in this example, $d_i = 0;\ \forall i < n$. The bits to the right of the first 1 do not matter. So it is clear that the first 1 has \textit{more priority} than the other 1s that follow. And we also want the position of the first 1 in binary so that this can be directly fed into the enables of the shifters as described in Section \ref{shifter_section}.This process can be done by using a priority encoder
+The last case is a little different than the other cases since it requires finding the first 1 after the radix point when scanned from left to right. If the first 1 is found at position $d_{-n}$ than the number has to be shifted $n$ bits to the left. Note that in this example, $d_i = 0;\ \forall i < n$. The bits to the right of the first 1 do not matter. So it is clear that the first 1 has \textit{more priority} than the other 1s that follow. And we also want the position of the first 1 in binary so that this can be directly fed into the enables of the shifters as described in Section \ref{shifter_section}. This process can be done by using a priority encoder. After shifting the significand to the right, the exponent must also be reduced by the same amount as the shift amount.
+
+The normalizer is the main module that handles the overflow and underflow. Basically, after left shifting, if all of the bits of the exponent are 1, or there is a carry generated while incrementing the exponent, this is considered to be an overflow. As neither fall on the domain of floating point number (Note that an exponent having all bits set is reserved).\\
+
+And after left shifting, if a borrow is generated while subtracting from the exponent, an underflow occurs and gets reported.
+
+\subsection{Rounder}
+
+
 \end{document}
