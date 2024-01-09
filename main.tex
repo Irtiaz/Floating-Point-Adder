@@ -1,0 +1,18 @@
+\documentclass[14pt]{article}
+
+\begin{document}
+
+\section{Introduction}
+A floating point number is a number that has a decimal point and thus can store a fractional value. These numbers are stored differently than integers because to store a floating point number there are mainly 2 challenges. First of all, there is a challenge of storing the integer part and also storing the fractional part, hence more memory. Secondly, there are infinitely many floating point numbers even in a finite range, for example $[0, 1]$. So the floating point representation has to be clever enough to allow floating point numbers in a large range, as well as support good enough precision.\\\\
+
+The floating point number representation uses the scientific notation of numbers. It has 3 parts - sign, significand and exponent. There are many different standards that decide how many bits each of these segments should store.\\
+The \textit{IEEE 754} standard specifies that there should be 1 sign bit, 8 exponent bits and 23 significand bits.\\
+The exponent is not directly stored, rather it is \textit{biased} first by adding a bias to the actual exponent and than store that in memory. The significance of this process is to make the exponent unsigned, thus allowing easier circuitry to deal with the comparison of exponents of 2 numbers. The bias is chosen to be $2^{n-1}-1$ where $n$ is the number of bits in the exponent field.\\
+In the scientific notation there is always a 1 in front of the radix point unless the number is 0. So storing that 1 is redundant, hence the significand bits always store the fractional part.
+
+So the overall representation looks like: 
+$$(-1)^{\textrm{sign}}\times(1 + \textrm{significand})\times2^{\textrm{exponent}-\textrm{bias}}$$
+Here the \textit{exponent} portion represents the exponent stored in memory.\\\\
+
+This representation has the power of encapsulating large range due to the use of exponents. On the other hand it can store numbers in great precision as effective exponents can be negative, and thus indicate really small numbers. But it should be kept in mind that there can be scenarios, specially for larger exponents, where the exact floating point number can not be stored. In those cases the memory stores the nearest floating point number.
+\end{document}
