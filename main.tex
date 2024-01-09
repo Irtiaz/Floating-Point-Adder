@@ -1,5 +1,7 @@
 \documentclass[14pt]{article}
 
+\usepackage{multirow}
+
 \begin{document}
 
 \section{Introduction}
@@ -71,6 +73,37 @@ The normalizer is the main module that handles the overflow and underflow. Basic
 And after left shifting, if a borrow is generated while subtracting from the exponent, an underflow occurs and gets reported.
 
 \subsection{Rounder}
+The rounder is responsible for rounding the result and storing only the limited number of bits (in this assignment, 20 bits) in the significand segment of the result.\\
+Initially before exponent equalization, three 0 bits are added to the right of the number. But after the whole addition process, we can not store those bits as our memory is limited. But those bits help us store the closest result by approximating it. The 3 bits are called the guard bit, the round bit and the sticky bit (G, R, S).\\
 
+By the \textit{IEEE 754} standard, the approximation is achieved in the following manner-\\
+
+{
+	\centering
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\textbf{G} & \textbf{R} & \textbf{S} & \textbf{Process} & \textbf{Comment}\\
+		\hline
+		0 & 0 & 0 & \multirow{4}{*}{Truncate} & \multirow{4}{*}{Add 0 to the actual significand}\\
+		\cline{1-3}
+		0 & 0 & 1 & &\\
+		\cline{1-3}
+		0 & 1 & 0 & &\\
+		\cline{1-3}
+		0 & 1 & 1 & &\\
+		\hline
+		1 & 0 & 0 & Round to even & Add 1 if the last bit of actual significand is 1\\
+		\hline
+		1 & 0 & 1 & \multirow{3}{*}{Round up} & \multirow{3}{*}{Add 1 to the actual significand}\\
+		\cline{1-3}
+		1 & 1 & 0 & & \\
+		\cline{1-3}
+		1 & 1 & 1 & & \\
+		\hline
+	\end{tabular}\par
+}
+From this table this is apparent that we only add 1 when the guard bit (G) is 1 \textbf{AND} either of the round bit (R) \textbf{OR} the sticky bit (S) \textbf{OR} the last bit of the significand is 1. So we add 1 when $G(R + S + d_0) = 1$\\
+
+In other words, we add $G(R + S + d_0)$ to our 20 bit significand.
 
 \end{document}
