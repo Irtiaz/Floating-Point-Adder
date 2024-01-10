@@ -23,17 +23,21 @@ This representation has the power of encapsulating large range due to the use of
 \section{Problem Specification}
 The assignment asked to create a floating point adder circuit that takes 2 floating point numbers and calculates their sum, and also notifies if there was any overflow or underflow. The representation was defined in the following manner- \\
 
-{
-	\centering
-	\begin{tabular}{|c|c|c|}
-		\hline
-		\textbf{Sign} & \textbf{Exponent} & \textbf{Significand}\\
-		\hline
-		1 bit & 11 bits & 20 bits\\
-		\hline
-	\end{tabular}\par
-}
+\begin{table}[!h]
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			\textbf{Sign} & \textbf{Exponent} & \textbf{Significand}\\
+			\hline
+			1 bit & 11 bits & 20 bits\\
+			\hline
+		\end{tabular}
+		\caption{Problem specification}
+	\end{center}
+\end{table}
 
+\section{Flowchart}
+\section{High Level Block Diagram}
 \section{Description of Modules}
 Each high level module and how they work is listed below
 
@@ -91,32 +95,72 @@ Initially before exponent equalization, three 0 bits are added to the right of t
 
 By the \textit{IEEE 754} standard, the approximation is achieved in the following manner-\\
 
-{
-	\centering
-	\begin{tabular}{|c|c|c|c|c|}
-		\hline
-		\textbf{G} & \textbf{R} & \textbf{S} & \textbf{Process} & \textbf{Comment}\\
-		\hline
-		0 & 0 & 0 & \multirow{4}{*}{Truncate} & \multirow{4}{*}{Add 0 to the actual significand}\\
-		\cline{1-3}
-		0 & 0 & 1 & &\\
-		\cline{1-3}
-		0 & 1 & 0 & &\\
-		\cline{1-3}
-		0 & 1 & 1 & &\\
-		\hline
-		1 & 0 & 0 & Round to even & Add 1 if the last bit of actual significand is 1\\
-		\hline
-		1 & 0 & 1 & \multirow{3}{*}{Round up} & \multirow{3}{*}{Add 1 to the actual significand}\\
-		\cline{1-3}
-		1 & 1 & 0 & & \\
-		\cline{1-3}
-		1 & 1 & 1 & & \\
-		\hline
-	\end{tabular}\par
-}
+\begin{table}[!h]
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			\textbf{G} & \textbf{R} & \textbf{S} & \textbf{Process} & \textbf{Comment}\\
+			\hline
+			0 & 0 & 0 & \multirow{4}{*}{Truncate} & \multirow{4}{*}{Add 0 to the actual significand}\\
+			\cline{1-3}
+			0 & 0 & 1 & &\\
+			\cline{1-3}
+			0 & 1 & 0 & &\\
+			\cline{1-3}
+			0 & 1 & 1 & &\\
+			\hline
+			1 & 0 & 0 & Round to even & Add 1 if the last bit of actual significand is 1\\
+			\hline
+			1 & 0 & 1 & \multirow{3}{*}{Round up} & \multirow{3}{*}{Add 1 to the actual significand}\\
+			\cline{1-3}
+			1 & 1 & 0 & & \\
+			\cline{1-3}
+			1 & 1 & 1 & & \\
+			\hline
+		\end{tabular}
+		\caption{Rounder Truth Table}
+	\end{center}
+\end{table}
 From this table this is apparent that we only add 1 when the guard bit (G) is 1 \textbf{AND} either of the round bit (R) \textbf{OR} the sticky bit (S) \textbf{OR} the last bit of the significand is 1. So we add 1 when $G(R + S + d_0) = 1$. In other words, we add $G(R + S + d_0)$ to our 20 bit significand.\\
 
 The number can become denormalized after rounding up or rounding to even. In that case we have to shift the number 1 bit to the right and hence increment the exponent. Because the exponent is being incremented, there can be scenarios where the exponent is too large, thus an overflow. So the rounder also reports such overflows.
+
+\section{ICs Used with Count as a Chart}
+\begin{table}[!h]
+	\begin{center}
+		\begin{tabular}{c c}
+			\textbf{IC} & \textbf{Quantity}\\
+			\hline
+			\hline
+			ALU & 9\\
+			IC 74157 & 110\\
+			IC 7432 & 14\\
+			IC 7486 & 8\\
+			IC 7404 & 8\\
+			IC 74148 & 4\\
+			IC 7408 & 6\\
+			IC 7402 & 1\\
+			\hline
+			Total & 160
+		\end{tabular}
+		\caption{ICs Used with Quantity}
+	\end{center}
+\end{table}
+
+\section{Simulator Software with Version}
+Logisim 2.7.1 has been used for this assignment.
+
+\section{Discussion}
+All of us have put a great deal of effort in order to complete this assignment. We tried our best to reduce the number of ICs and also tried to make a simplified design overall so that the real life implementation becomes easier. The use of ALU was preferred over creating own adders or comparators as that has the potential of saving a lot of ICs.\\
+
+The assignment asked to only handle the floating point domain, but we also handled the case when the number is zero. According to the \textit{IEEE 754} standard, the floating point number's exponent can not be all 0s nor all 1s. These 2 cases are reserved. They indicate different meanings. For instance, both the significand and exponent being 0 indicate $0.0$. Although the assignment did not ask to handle the reserved cases, we decided to tackle the zero's case as well. For example with the assignment requirement implemented without handling these special cases, the adder will fail to provide $a - a = 0$ or $a + 0 = 0 + a = a$. But we took great care to implement this special case of the input or output being 0.\\
+
+The adder of our implementation is not perfect. Since the rounding buffer contains only 1 sticky bit. By adding more sticky bits it is possible to have a greater buffer of result, and thus better precision. Having said that, we have found the precision level of our implementation is good enough for most of the input cases.\\
+
+We have thoroughly checked many input cases and to test it we have created a \textit{ANSI C} program to verify our results.\\
+
+Overall the entire design process along with the implementation proved to be a very challenging but interesting task. We have learned a lot from this assignment.
+
+\section{Contribution of Each Member}
 
 \end{document}
