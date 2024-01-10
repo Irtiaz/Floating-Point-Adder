@@ -34,7 +34,7 @@ The assignment asked to create a floating point adder circuit that takes 2 float
 	\end{tabular}\par
 }
 
-\section{Comprehensive Design Description}
+\section{Description of Modules}
 Each high level module and how they work is listed below
 
 \subsection{Multiplexers}
@@ -56,7 +56,10 @@ The exponents of the numbers need to be equal in order for the significands to b
 This is achieved by using a subtractor circuit as a comparator and comparing the \textit{deciders}. Then the comparison result is fed into 2 multiplexers that finally re-arrange the \textit{base} numbers and output \textit{smaller} and \textit{larger}
 
 \subsection{Priority Encoder}
-The priority encoder IC (74148) is only available for 8 to 3 line. But in order to normalize the number we needed priority encoders of size 32 bits (More details can be found in Section \ref{normalizer_section}). So we had to extend the basic 74148 IC. Moreover, the 74148 IC has active low inputs. We had to convert it to be used as active high input
+We need to use a 32-bit priority encoder for normalization (explained further in Section - \ref{normalizer_section}). However, $8\times3$ or $10\times4$ priority encoders are the only ones available.  Therefore, we first cascade two 74148 ($8\times3$) priority encoders to create a $16 \times 4$ priority encoder before creating our 32-bit priority encoder. A second $16\times4$ priority encoder is made in a similar manner. Now we cascade our $16\times4$ priority encoders to create $32 \times 5$ priority encoder. Therefore, we can use four 74148 ($8\times3$ Priority encoder) ICs to create a $32\times5$ priority encoder.
+
+\subsubsection{Cascading two $8\times3$ priority encoders}
+74148 has 8 input pins, 3 output pins, 1 enable input (EI), 1 enable output (EO) and 1 group signal (GS) pin. We have two ICs of 74148 ($\textrm{IC}_1$ and $\textrm{IC}_2$). Input 8 to input 15 is connected to $\textrm{IC}_1$ and input 0 to input 7 is connected to $\textrm{IC}_2$.  EI of $\textrm{IC}_2$ is connected to the EO of $\textrm{IC}_1$. Output 3 is obtained from $\textrm{IC}_1$'s GS. Output-2 is taken from $\textrm{O}_2$ ($\textrm{IC}_1$) AND $\textrm{O}_1$($\textrm{IC}_2$). In a similar manner, output-1 and output-0 are also obtained by applying the AND operation to $\textrm{IC}_1$ and $\textrm{IC}_2$'s outputs. Another $16\times4$ priority encoder is created using two 74148 ICs ($\textrm{IC}_3$ and $\textrm{IC}_4$).
 
 \subsection{Normalization}\label{normalizer_section}
 After addition the sum could become denormalized. In that case we have to normalize the result. Let's say the sum looks like this:  $d_1d_0.d_{-1}d_{-2}...d_{-20}$. Then the normalization process can be described in 3 cases -
