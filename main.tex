@@ -58,8 +58,14 @@ This is achieved by using a subtractor circuit as a comparator and comparing the
 \subsection{Priority Encoder}
 We need to use a 32-bit priority encoder for normalization (explained further in Section - \ref{normalizer_section}). However, $8\times3$ or $10\times4$ priority encoders are the only ones available.  Therefore, we first cascade two 74148 ($8\times3$) priority encoders to create a $16 \times 4$ priority encoder before creating our 32-bit priority encoder. A second $16\times4$ priority encoder is made in a similar manner. Now we cascade our $16\times4$ priority encoders to create $32 \times 5$ priority encoder. Therefore, we can use four 74148 ($8\times3$ Priority encoder) ICs to create a $32\times5$ priority encoder.
 
-\subsubsection{Cascading two $8\times3$ priority encoders}
+\subsubsection{Cascading two $8\times3$ priority encoders}\label{16_encoder_subsection}
 74148 has 8 input pins, 3 output pins, 1 enable input (EI), 1 enable output (EO) and 1 group signal (GS) pin. We have two ICs of 74148 ($\textrm{IC}_1$ and $\textrm{IC}_2$). Input 8 to input 15 is connected to $\textrm{IC}_1$ and input 0 to input 7 is connected to $\textrm{IC}_2$.  EI of $\textrm{IC}_2$ is connected to the EO of $\textrm{IC}_1$. Output 3 is obtained from $\textrm{IC}_1$'s GS. Output-2 is taken from $\textrm{O}_2$ ($\textrm{IC}_1$) AND $\textrm{O}_1$($\textrm{IC}_2$). In a similar manner, output-1 and output-0 are also obtained by applying the AND operation to $\textrm{IC}_1$ and $\textrm{IC}_2$'s outputs. Another $16\times4$ priority encoder is created using two 74148 ICs ($\textrm{IC}_3$ and $\textrm{IC}_4$).
+
+\subsubsection{Cascading two $16\times4$ priority encoders}\label{32_encoder_subsection}
+It's the same procedure as before. Instead of using the 74148 IC as our base component, we use the $16\times4$ encoder (described in Section \ref{16_encoder_subsection}) and cascade 2 of them to achieve a $32\times5$ encoder.\\
+
+\subsubsection{32-bit input high encoder}
+This is a wrapper around the 32 bit encoder described in Section \ref{32_encoder_subsection}. To enable active high input, we first invert the input.  Our module has an additional pin that we refer to as \textit{1 based indexing}. The output is incremented when this pin is set high. 
 
 \subsection{Normalization}\label{normalizer_section}
 After addition the sum could become denormalized. In that case we have to normalize the result. Let's say the sum looks like this:  $d_1d_0.d_{-1}d_{-2}...d_{-20}$. Then the normalization process can be described in 3 cases -
