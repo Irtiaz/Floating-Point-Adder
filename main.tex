@@ -64,7 +64,7 @@ We need to use a 32-bit priority encoder for normalization (explained further in
 \subsubsection{Cascading two $16\times4$ priority encoders}\label{32_encoder_subsection}
 It's the same procedure as before. Instead of using the 74148 IC as our base component, we use the $16\times4$ encoder (described in Section \ref{16_encoder_subsection}) and cascade 2 of them to achieve a $32\times5$ encoder.\\
 
-\subsubsection{32-bit input high encoder}
+\subsubsection{32-bit input high encoder}\label{32_high_encoder_subsection}
 This is a wrapper around the 32 bit encoder described in Section \ref{32_encoder_subsection}. To enable active high input, we first invert the input.  Our module has an additional pin that we refer to as \textit{1 based indexing}. The output is incremented when this pin is set high. 
 
 \subsection{Normalization}\label{normalizer_section}
@@ -75,7 +75,11 @@ After addition the sum could become denormalized. In that case we have to normal
 	\item[\boldmath{$d_1d_0=00$}] The number needs to be left shifted to bring a 1 after the radix point to the front of the number
 \end{description}
 
-The last case is a little different than the other cases since it requires finding the first 1 after the radix point when scanned from left to right. If the first 1 is found at position $d_{-n}$ than the number has to be shifted $n$ bits to the left. Note that in this example, $d_i = 0;\ \forall i < n$. The bits to the right of the first 1 do not matter. So it is clear that the first 1 has \textit{more priority} than the other 1s that follow. And we also want the position of the first 1 in binary so that this can be directly fed into the enables of the shifters as described in Section \ref{shifter_section}. This process can be done by using a priority encoder. After shifting the significand to the right, the exponent must also be reduced by the same amount as the shift amount.
+The last case is a little different than the other cases since it requires finding the first 1 after the radix point when scanned from left to right. If the first 1 is found at position $d_{-n}$ than the number has to be shifted $n$ bits to the left. Note that in this example, $d_i = 0;\ \forall i < n$. The bits to the right of the first 1 do not matter. So it is clear that the first 1 has \textit{more priority} than the other 1s that follow. And we also want the position of the first 1 in binary so that this can be directly fed into the enables of the shifters as described in Section \ref{shifter_section}. This process can be done by using a priority encoder.\\
+
+But the basic 32 bit priority encoder (Section \ref{32_encoder_subsection}) has active low input and active low output. But the bits of our significand are active high. So instead, we use the 32-bit input high encoder (Section \ref{32_high_encoder_subsection}). However, there's no need to invert the outputs. For normalization, lets say we have 1 in the $20^{th}$ bit.  So, the number needs to be shifted by 1 bit to the left. Consequently, our priority encoder should give us 00001. We send our $20^{th}$ bit to our priority encoder's input-31. The output we get is 00000 but our required output is 00001. That can be achieved by setting the \textit{1 based indexing} pin high.\\
+
+After shifting the significand to the left, the exponent must also be reduced by the shift amount.
 
 The normalizer is the main module that handles the overflow and underflow. Basically, after left shifting, if all of the bits of the exponent are 1, or there is a carry generated while incrementing the exponent, this is considered to be an overflow. As neither fall on the domain of floating point number (Note that an exponent having all bits set is reserved).\\
 
