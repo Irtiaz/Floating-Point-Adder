@@ -1,6 +1,7 @@
 \documentclass[14pt]{article}
 
 \usepackage{multirow}
+\usepackage{hyperref}
 
 \begin{document}
 
@@ -159,7 +160,7 @@ The assignment asked to only handle the floating point domain, but we also handl
 
 The adder of our implementation is not perfect. Since the rounding buffer contains only 1 sticky bit. By adding more sticky bits it is possible to have a greater buffer of result, and thus better precision. Having said that, we have found the precision level of our implementation is good enough for most of the input cases.\\
 
-We have thoroughly checked many input cases and to test it we have created a \textit{ANSI C} program to verify our results.\\
+We have thoroughly checked many input cases and to test it we have created a \textit{ANSI C} program (\url{https://github.com/Irtiaz/Floating-Point-Adder-Simulator}) to verify our results. But the program was hard to work with since it ran on the terminal. So we built a \textit{Typescript, React} web app (\url{https://floating-point-adder.netlify.app/}) that helped us quickly test our adder against many different test cases.\\
 
 Overall the entire design process along with the implementation proved to be a very challenging but interesting task. We have learned a lot from this assignment.
 
